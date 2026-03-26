@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Sunshine Web Co.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal:       #2AB4A6;
+      --teal-dark:  #209990;
+      --teal-light: #E6F7F6;
+      --yellow:     #F5C842;
+      --bg:         #F4F6F9;
+      --white:      #FFFFFF;
+      --charcoal:   #2C2C2C;
+      --gray:       #6B7280;
+      --gray-light: #E5E7EB;
+      --border:     #E2E8F0;
+      --red:        #EF4444;
+      --red-light:  #FEE2E2;
+      --green:      #22C55E;
+      --green-light:#DCFCE7;
+      --shadow:     0 4px 24px rgba(0,0,0,.07);
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--charcoal);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---- LOGIN SCREEN ---- */
+    #loginScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--teal-light) 0%, #fffde7 100%);
+    }
+
+    .login-card {
+      background: var(--white);
+      border-radius: 20px;
+      box-shadow: 0 8px 48px rgba(0,0,0,.12);
+      padding: 48px 44px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .login-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--charcoal);
+      margin-bottom: 8px;
+    }
+
+    .login-sub {
+      font-size: .85rem;
+      color: var(--gray);
+      margin-bottom: 32px;
+    }
+
+    .login-label {
+      display: block;
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--charcoal);
+      text-align: left;
+      margin-bottom: 6px;
+    }
+
+    .login-input {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: .95rem;
+      font-family: inherit;
+      color: var(--charcoal);
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      margin-bottom: 20px;
+    }
+    .login-input:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(42,180,166,.12);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--teal);
+      color: var(--white);
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+    }
+    .login-btn:hover { background: var(--teal-dark); transform: translateY(-1px); }
+
+    .login-error {
+      margin-top: 14px;
+      font-size: .85rem;
+      color: var(--red);
+      font-weight: 600;
+      display: none;
+    }
+    .login-error.show { display: block; }
+
+    /* ---- ADMIN APP ---- */
+    #adminApp { display: none; min-height: 100vh; }
+
+    /* Sidebar */
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 240px;
+      background: var(--charcoal);
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 28px 20px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--white);
+      margin-bottom: 4px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+    }
+
+    .sidebar-section {
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.35);
+      margin: 24px 0 8px;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: .88rem;
+      font-weight: 600;
+      color: rgba(255,255,255,.6);
+      cursor: pointer;
+      transition: background .2s, color .2s;
+      text-decoration: none;
+      border: none;
+      background: none;
+      width: 100%;
+      font-family: inherit;
+    }
+    .sidebar-link:hover { background: rgba(255,255,255,.08); color: var(--white); }
+    .sidebar-link.active { background: var(--teal); color: var(--white); }
+
+    .sidebar-badge {
+      margin-left: auto;
+      background: var(--yellow);
+      color: var(--charcoal);
+      font-size: .7rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 99px;
+    }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,.1);
+    }
+
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: .88rem;
+      font-weight: 600;
+      color: rgba(255,255,255,.5);
+      cursor: pointer;
+      transition: .2s;
+      background: none;
+      border: none;
+      font-family: inherit;
+      width: 100%;
+    }
+    .logout-btn:hover { color: var(--white); background: rgba(255,255,255,.06); }
+
+    /* Main content */
+    .main {
+      flex: 1;
+      padding: 36px 40px;
+      overflow-x: auto;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .topbar-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--charcoal);
+    }
+    .topbar-sub {
+      font-size: .85rem;
+      color: var(--gray);
+      margin-top: 2px;
+    }
+
+    .topbar-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn-sm {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-size: .85rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      transition: .2s;
+    }
+    .btn-teal { background: var(--teal); color: var(--white); }
+    .btn-teal:hover { background: var(--teal-dark); }
+    .btn-ghost { background: var(--white); color: var(--gray); border: 1.5px solid var(--border); }
+    .btn-ghost:hover { border-color: var(--teal); color: var(--teal); }
+    .btn-red { background: var(--red-light); color: var(--red); }
+    .btn-red:hover { background: var(--red); color: var(--white); }
+
+    /* Stats row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 22px 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-label {
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--gray);
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--charcoal);
+      line-height: 1;
+    }
+
+    .stat-sub {
+      font-size: .78rem;
+      color: var(--gray);
+      margin-top: 6px;
+    }
+
+    .stat-dot {
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      margin-right: 4px;
+    }
+
+    /* Filter bar */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 200px;
+      max-width: 360px;
+    }
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
+      font-size: .9rem;
+      pointer-events: none;
+    }
+    .search-input {
+      width: 100%;
+      padding: 10px 14px 10px 34px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: .88rem;
+      font-family: inherit;
+      color: var(--charcoal);
+      background: var(--white);
+      outline: none;
+      transition: border-color .2s;
+    }
+    .search-input:focus { border-color: var(--teal); }
+
+    .filter-select {
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: .88rem;
+      font-family: inherit;
+      color: var(--charcoal);
+      background: var(--white);
+      outline: none;
+      cursor: pointer;
+      transition: border-color .2s;
+    }
+    .filter-select:focus { border-color: var(--teal); }
+
+    /* Orders table */
+    .table-wrap {
+      background: var(--white);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      text-align: left;
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--gray);
+      padding: 14px 20px;
+      background: #FAFBFC;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background .15s;
+      cursor: pointer;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #F8FAFC; }
+
+    tbody td {
+      padding: 16px 20px;
+      font-size: .88rem;
+      vertical-align: middle;
+    }
+
+    .td-name { font-weight: 700; color: var(--charcoal); }
+    .td-biz  { color: var(--teal); font-weight: 600; font-size: .82rem; margin-top: 2px; }
+    .td-contact { color: var(--gray); font-size: .82rem; line-height: 1.6; }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: .75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 99px;
+    }
+    .status-New      { background: #EFF6FF; color: #2563EB; }
+    .status-InProgress { background: #FFF7ED; color: #C2410C; }
+    .status-Complete { background: var(--green-light); color: #15803D; }
+
+    .td-message {
+      max-width: 260px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--gray);
+      font-size: .82rem;
+    }
+
+    .td-date { color: var(--gray); font-size: .8rem; white-space: nowrap; }
+
+    .row-actions {
+      display: flex;
+      gap: 6px;
+      opacity: 0;
+      transition: opacity .15s;
+    }
+    tbody tr:hover .row-actions { opacity: 1; }
+
+    .icon-btn {
+      width: 30px; height: 30px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .85rem;
+      transition: background .15s;
+      background: var(--gray-light);
+      color: var(--gray);
+    }
+    .icon-btn:hover { background: var(--teal-light); color: var(--teal); }
+    .icon-btn.del:hover { background: var(--red-light); color: var(--red); }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 72px 24px;
+    }
+    .empty-icon { font-size: 3rem; margin-bottom: 16px; }
+    .empty-title { font-size: 1.1rem; font-weight: 700; color: var(--charcoal); margin-bottom: 8px; }
+    .empty-sub { font-size: .9rem; color: var(--gray); }
+
+    /* Detail modal */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.45);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      background: var(--white);
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.2);
+      width: 100%;
+      max-width: 560px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 28px 32px 0;
+    }
+
+    .modal-title { font-size: 1.15rem; font-weight: 800; color: var(--charcoal); }
+    .modal-date  { font-size: .8rem; color: var(--gray); margin-top: 4px; }
+
+    .modal-close {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: var(--gray-light);
+      color: var(--gray);
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: .15s;
+    }
+    .modal-close:hover { background: var(--red-light); color: var(--red); }
+
+    .modal-body { padding: 24px 32px 32px; }
+
+    .modal-field { margin-bottom: 18px; }
+    .modal-field-label {
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--gray);
+      margin-bottom: 4px;
+    }
+    .modal-field-value {
+      font-size: .95rem;
+      color: var(--charcoal);
+      font-weight: 500;
+      word-break: break-word;
+    }
+    .modal-field-value.message {
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: .9rem;
+      line-height: 1.65;
+      color: var(--gray);
+      white-space: pre-wrap;
+    }
+    .modal-field-value a { color: var(--teal); }
+
+    .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+
+    .modal-footer {
+      display: flex;
+      gap: 10px;
+      padding: 0 32px 28px;
+      flex-wrap: wrap;
+    }
+
+    .status-select {
+      padding: 9px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: .88rem;
+      font-family: inherit;
+      color: var(--charcoal);
+      background: var(--white);
+      outline: none;
+      cursor: pointer;
+    }
+    .status-select:focus { border-color: var(--teal); }
+
+    /* Confirm dialog */
+    .confirm-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.5);
+      z-index: 300;
+      align-items: center;
+      justify-content: center;
+    }
+    .confirm-backdrop.open { display: flex; }
+    .confirm-box {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 32px;
+      max-width: 360px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 16px 48px rgba(0,0,0,.2);
+    }
+    .confirm-icon { font-size: 2.4rem; margin-bottom: 12px; }
+    .confirm-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+    .confirm-sub { font-size: .88rem; color: var(--gray); margin-bottom: 24px; }
+    .confirm-actions { display: flex; gap: 10px; justify-content: center; }
+
+    @media (max-width: 900px) {
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 720px) {
+      .layout { flex-direction: column; }
+      .sidebar { width: 100%; height: auto; position: static; flex-direction: row; flex-wrap: wrap; padding: 16px; gap: 8px; }
+      .sidebar-bottom { margin-top: 0; padding-top: 0; border-top: none; }
+      .main { padding: 20px; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .modal-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ LOGIN ============ -->
+  <div id="loginScreen">
+    <div class="login-card">
+      <div class="login-logo">
+        <svg width="32" height="32" viewBox="0 0 36 36" fill="none">
+          <circle cx="18" cy="18" r="8" fill="#F5C842"/>
+          <g stroke="#F5C842" stroke-width="2.2" stroke-linecap="round">
+            <line x1="18" y1="3" x2="18" y2="7"/>
+            <line x1="18" y1="29" x2="18" y2="33"/>
+            <line x1="3" y1="18" x2="7" y2="18"/>
+            <line x1="29" y1="18" x2="33" y2="18"/>
+            <line x1="7.39" y1="7.39" x2="10.27" y2="10.27"/>
+            <line x1="25.73" y1="25.73" x2="28.61" y2="28.61"/>
+            <line x1="28.61" y1="7.39" x2="25.73" y2="10.27"/>
+            <line x1="10.27" y1="25.73" x2="7.39" y2="28.61"/>
+          </g>
+        </svg>
+        Sunshine Web Co.
+      </div>
+      <p class="login-sub">Admin Dashboard — Sign in to continue</p>
+
+      <label class="login-label" for="adminPass">Password</label>
+      <input class="login-input" type="password" id="adminPass" placeholder="Enter admin password" autocomplete="current-password" />
+
+      <button class="login-btn" id="loginBtn">Sign In →</button>
+      <p class="login-error" id="loginError">Incorrect password. Try again.</p>
+    </div>
+  </div>
+
+
+  <!-- ============ ADMIN APP ============ -->
+  <div id="adminApp">
+    <div class="layout">
+
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-logo">
+          <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
+            <circle cx="18" cy="18" r="8" fill="#F5C842"/>
+            <g stroke="#F5C842" stroke-width="2.2" stroke-linecap="round">
+              <line x1="18" y1="3" x2="18" y2="7"/>
+              <line x1="18" y1="29" x2="18" y2="33"/>
+              <line x1="3" y1="18" x2="7" y2="18"/>
+              <line x1="29" y1="18" x2="33" y2="18"/>
+              <line x1="7.39" y1="7.39" x2="10.27" y2="10.27"/>
+              <line x1="25.73" y1="25.73" x2="28.61" y2="28.61"/>
+              <line x1="28.61" y1="7.39" x2="25.73" y2="10.27"/>
+              <line x1="10.27" y1="25.73" x2="7.39" y2="28.61"/>
+            </g>
+          </svg>
+          Sunshine Web Co.
+        </div>
+
+        <p class="sidebar-section">Menu</p>
+        <button class="sidebar-link active" id="ordersTab">
+          📋 Orders
+          <span class="sidebar-badge" id="newBadge" style="display:none"></span>
+        </button>
+
+        <div class="sidebar-bottom">
+          <a href="index.html" class="sidebar-link" target="_blank">🌐 View Site</a>
+          <button class="logout-btn" id="logoutBtn">⬅ Sign Out</button>
+        </div>
+      </aside>
+
+      <!-- Main -->
+      <main class="main">
+
+        <!-- Top bar -->
+        <div class="topbar">
+          <div>
+            <h1 class="topbar-title">Orders</h1>
+            <p class="topbar-sub">All website order requests submitted through your site.</p>
+          </div>
+          <div class="topbar-actions">
+            <button class="btn-sm btn-ghost" id="exportBtn">⬇ Export CSV</button>
+            <button class="btn-sm btn-red" id="clearAllBtn">🗑 Clear All</button>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-label">Total Orders</div>
+            <div class="stat-value" id="statTotal">0</div>
+            <div class="stat-sub">All time</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">New</div>
+            <div class="stat-value" id="statNew" style="color:#2563EB">0</div>
+            <div class="stat-sub"><span class="stat-dot" style="background:#2563EB"></span>Needs response</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">In Progress</div>
+            <div class="stat-value" id="statProgress" style="color:#C2410C">0</div>
+            <div class="stat-sub"><span class="stat-dot" style="background:#C2410C"></span>Being worked on</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Complete</div>
+            <div class="stat-value" id="statComplete" style="color:#15803D">0</div>
+            <div class="stat-sub"><span class="stat-dot" style="background:#15803D"></span>Launched</div>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-bar">
+          <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input class="search-input" type="text" id="searchInput" placeholder="Search by name, business, or email…" />
+          </div>
+          <select class="filter-select" id="statusFilter">
+            <option value="">All Statuses</option>
+            <option value="New">New</option>
+            <option value="InProgress">In Progress</option>
+            <option value="Complete">Complete</option>
+          </select>
+        </div>
+
+        <!-- Table -->
+        <div class="table-wrap">
+          <table id="ordersTable">
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Contact</th>
+                <th>Message</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="ordersBody"></tbody>
+          </table>
+          <div class="empty-state" id="emptyState" style="display:none">
+            <div class="empty-icon">📭</div>
+            <div class="empty-title">No orders yet</div>
+            <div class="empty-sub">When customers submit the order form on your site, they'll appear here.</div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+
+  <!-- ============ ORDER DETAIL MODAL ============ -->
+  <div class="modal-backdrop" id="detailModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title" id="modalTitle"></div>
+          <div class="modal-date" id="modalDate"></div>
+        </div>
+        <button class="modal-close" id="modalClose">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-grid">
+          <div class="modal-field">
+            <div class="modal-field-label">Name</div>
+            <div class="modal-field-value" id="mName"></div>
+          </div>
+          <div class="modal-field">
+            <div class="modal-field-label">Business</div>
+            <div class="modal-field-value" id="mBiz"></div>
+          </div>
+          <div class="modal-field">
+            <div class="modal-field-label">Email</div>
+            <div class="modal-field-value" id="mEmail"></div>
+          </div>
+          <div class="modal-field">
+            <div class="modal-field-label">Phone</div>
+            <div class="modal-field-value" id="mPhone"></div>
+          </div>
+        </div>
+        <div class="modal-field">
+          <div class="modal-field-label">Message</div>
+          <div class="modal-field-value message" id="mMessage"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <select class="status-select" id="modalStatusSelect">
+          <option value="New">New</option>
+          <option value="InProgress">In Progress</option>
+          <option value="Complete">Complete</option>
+        </select>
+        <button class="btn-sm btn-teal" id="saveStatusBtn">Save Status</button>
+        <button class="btn-sm btn-red" id="deleteOrderBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============ CONFIRM DIALOG ============ -->
+  <div class="confirm-backdrop" id="confirmBackdrop">
+    <div class="confirm-box">
+      <div class="confirm-icon">⚠️</div>
+      <div class="confirm-title" id="confirmTitle">Are you sure?</div>
+      <div class="confirm-sub" id="confirmSub"></div>
+      <div class="confirm-actions">
+        <button class="btn-sm btn-ghost" id="confirmCancel">Cancel</button>
+        <button class="btn-sm btn-red" id="confirmOk">Delete</button>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    // ─── CONFIG ──────────────────────────────────────────────
+    // Change this password to whatever you want.
+    const ADMIN_PASSWORD = 'sunshine2026';
+    const STORAGE_KEY    = 'swc_orders';
+
+    // ─── STATE ───────────────────────────────────────────────
+    let orders      = [];
+    let currentId   = null;
+    let confirmCb   = null;
+
+    // ─── HELPERS ─────────────────────────────────────────────
+    const load  = () => JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    const save  = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+    const $     = id => document.getElementById(id);
+
+    // ─── LOGIN ───────────────────────────────────────────────
+    function tryLogin() {
+      const val = $('adminPass').value;
+      if (val === ADMIN_PASSWORD) {
+        $('loginScreen').style.display = 'none';
+        $('adminApp').style.display = 'block';
+        orders = load();
+        renderAll();
+      } else {
+        $('loginError').classList.add('show');
+        $('adminPass').value = '';
+        $('adminPass').focus();
+      }
+    }
+
+    $('loginBtn').addEventListener('click', tryLogin);
+    $('adminPass').addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
+
+    $('logoutBtn').addEventListener('click', () => {
+      $('adminApp').style.display = 'none';
+      $('loginScreen').style.display = 'flex';
+      $('adminPass').value = '';
+    });
+
+    // ─── RENDER ──────────────────────────────────────────────
+    function renderAll() {
+      renderStats();
+      renderTable();
+      renderBadge();
+    }
+
+    function renderStats() {
+      const total    = orders.length;
+      const newC     = orders.filter(o => o.status === 'New').length;
+      const prog     = orders.filter(o => o.status === 'InProgress').length;
+      const complete = orders.filter(o => o.status === 'Complete').length;
+      $('statTotal').textContent    = total;
+      $('statNew').textContent      = newC;
+      $('statProgress').textContent = prog;
+      $('statComplete').textContent = complete;
+    }
+
+    function renderBadge() {
+      const n = orders.filter(o => o.status === 'New').length;
+      const badge = $('newBadge');
+      if (n > 0) { badge.textContent = n; badge.style.display = 'inline'; }
+      else badge.style.display = 'none';
+    }
+
+    function filtered() {
+      const q  = $('searchInput').value.toLowerCase().trim();
+      const st = $('statusFilter').value;
+      return orders.filter(o => {
+        const matchSearch = !q || [o.name, o.business, o.email, o.phone, o.message].join(' ').toLowerCase().includes(q);
+        const matchStatus = !st || o.status === st;
+        return matchSearch && matchStatus;
+      });
+    }
+
+    function renderTable() {
+      const rows = filtered();
+      const tbody = $('ordersBody');
+      tbody.innerHTML = '';
+
+      if (rows.length === 0) {
+        $('emptyState').style.display = 'block';
+        $('ordersTable').style.display = 'none';
+        return;
+      }
+      $('emptyState').style.display = 'none';
+      $('ordersTable').style.display = 'table';
+
+      rows.forEach(o => {
+        const tr = document.createElement('tr');
+        tr.dataset.id = o.id;
+        tr.innerHTML = `
+          <td>
+            <div class="td-name">${esc(o.name)}</div>
+            <div class="td-biz">${esc(o.business)}</div>
+          </td>
+          <td class="td-contact">
+            <div><a href="mailto:${esc(o.email)}">${esc(o.email)}</a></div>
+            ${o.phone ? `<div>${esc(o.phone)}</div>` : ''}
+          </td>
+          <td>
+            <div class="td-message">${esc(o.message || '—')}</div>
+          </td>
+          <td>
+            <span class="status-badge status-${o.status.replace(' ','')}">
+              ${statusDot(o.status)} ${statusLabel(o.status)}
+            </span>
+          </td>
+          <td class="td-date">${esc(o.date)}</td>
+          <td>
+            <div class="row-actions">
+              <button class="icon-btn view-btn" title="View">👁</button>
+              <button class="icon-btn del icon-btn del-btn" title="Delete">🗑</button>
+            </div>
+          </td>
+        `;
+        tr.querySelector('.view-btn').addEventListener('click', e => { e.stopPropagation(); openModal(o.id); });
+        tr.querySelector('.del-btn').addEventListener('click', e => { e.stopPropagation(); confirmDelete(o.id); });
+        tr.addEventListener('click', () => openModal(o.id));
+        tbody.appendChild(tr);
+      });
+    }
+
+    function statusLabel(s) {
+      return s === 'InProgress' ? 'In Progress' : s;
+    }
+    function statusDot(s) {
+      const colors = { New: '🔵', InProgress: '🟠', Complete: '🟢' };
+      return colors[s] || '⚪';
+    }
+
+    function esc(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // ─── SEARCH / FILTER ─────────────────────────────────────
+    $('searchInput').addEventListener('input', renderTable);
+    $('statusFilter').addEventListener('change', renderTable);
+
+    // ─── MODAL ───────────────────────────────────────────────
+    function openModal(id) {
+      const o = orders.find(x => x.id === id);
+      if (!o) return;
+      currentId = id;
+
+      $('modalTitle').textContent = `${o.name} — ${o.business}`;
+      $('modalDate').textContent  = `Submitted ${o.date}`;
+      $('mName').textContent      = o.name;
+      $('mBiz').textContent       = o.business;
+      $('mEmail').innerHTML       = `<a href="mailto:${esc(o.email)}">${esc(o.email)}</a>`;
+      $('mPhone').textContent     = o.phone || '—';
+      $('mMessage').textContent   = o.message || '(no message)';
+      $('modalStatusSelect').value = o.status;
+
+      $('detailModal').classList.add('open');
+    }
+
+    $('modalClose').addEventListener('click', () => $('detailModal').classList.remove('open'));
+    $('detailModal').addEventListener('click', e => { if (e.target === $('detailModal')) $('detailModal').classList.remove('open'); });
+
+    $('saveStatusBtn').addEventListener('click', () => {
+      const o = orders.find(x => x.id === currentId);
+      if (!o) return;
+      o.status = $('modalStatusSelect').value;
+      save(); renderAll();
+      $('detailModal').classList.remove('open');
+    });
+
+    $('deleteOrderBtn').addEventListener('click', () => {
+      $('detailModal').classList.remove('open');
+      confirmDelete(currentId);
+    });
+
+    // ─── DELETE ──────────────────────────────────────────────
+    function confirmDelete(id) {
+      const o = orders.find(x => x.id === id);
+      if (!o) return;
+      $('confirmTitle').textContent = 'Delete this order?';
+      $('confirmSub').textContent   = `This will permanently remove the order from ${o.name} (${o.business}).`;
+      confirmCb = () => {
+        orders = orders.filter(x => x.id !== id);
+        save(); renderAll();
+        closeConfirm();
+      };
+      $('confirmBackdrop').classList.add('open');
+    }
+
+    $('confirmCancel').addEventListener('click', closeConfirm);
+    $('confirmOk').addEventListener('click', () => { if (confirmCb) confirmCb(); });
+    function closeConfirm() {
+      $('confirmBackdrop').classList.remove('open');
+      confirmCb = null;
+    }
+
+    // ─── CLEAR ALL ───────────────────────────────────────────
+    $('clearAllBtn').addEventListener('click', () => {
+      if (orders.length === 0) return;
+      $('confirmTitle').textContent = 'Clear all orders?';
+      $('confirmSub').textContent   = `This will permanently delete all ${orders.length} order(s). This cannot be undone.`;
+      $('confirmOk').textContent    = 'Clear All';
+      confirmCb = () => {
+        orders = []; save(); renderAll(); closeConfirm();
+        $('confirmOk').textContent = 'Delete';
+      };
+      $('confirmBackdrop').classList.add('open');
+    });
+
+    // ─── EXPORT CSV ──────────────────────────────────────────
+    $('exportBtn').addEventListener('click', () => {
+      if (orders.length === 0) return;
+      const headers = ['Date','Name','Business','Email','Phone','Message','Status'];
+      const rows = orders.map(o => [
+        o.date, o.name, o.business, o.email, o.phone || '', (o.message || '').replace(/\n/g,' '), o.status
+      ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(','));
+      const csv  = [headers.join(','), ...rows].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href = url;
+      a.download = `swc-orders-${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // ─── SEED DEMO DATA (remove if you want a clean start) ───
+    // Uncomment the lines below to pre-populate with sample orders for testing.
+    /*
+    if (!localStorage.getItem(STORAGE_KEY)) {
+      const demo = [
+        { id: 1001, date: 'Mar 24, 2026, 10:22 AM', name: 'Maria Gutierrez', business: 'Glam & Glow Salon', email: 'maria@glamglow.com', phone: '(813) 555-0142', message: 'We are a hair salon in Tampa. Looking for a site with our services and booking link.', status: 'New' },
+        { id: 1002, date: 'Mar 22, 2026, 2:45 PM', name: 'Dave Morales', business: 'Morales Roofing', email: 'dave@moralesroofing.com', phone: '(407) 555-0198', message: 'Need a basic site with contact form and photos of past work.', status: 'InProgress' },
+        { id: 1003, date: 'Mar 20, 2026, 9:10 AM', name: 'Linda Perez', business: 'Perez Family Kitchen', email: 'linda@perezfamilykitchen.com', phone: '', message: '', status: 'Complete' },
+      ];
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(demo));
+    }
+    */
+  </script>
+
+</body>
+</html>
